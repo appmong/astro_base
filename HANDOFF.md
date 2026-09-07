@@ -3,7 +3,7 @@
 > 다른 PC의 Claude Code로 이 프로젝트를 이어받을 때, **이 문서를 먼저 읽어주세요.**
 > Claude의 메모리와 대화 기록은 PC마다 따로 저장돼서 넘어오지 않아요. 이 문서가 그 맥락을 대신합니다.
 
-최종 업데이트: 2026-09-05
+최종 업데이트: 2026-09-07
 
 ---
 
@@ -45,8 +45,13 @@ astro/
 
 1. **Node.js 설치** (없으면):
    ```
-   winget install OpenJS.NodeJS.LTS
+   winget install OpenJS.NodeJS.LTS --source winget --accept-source-agreements --accept-package-agreements --silent
    ```
+   > ⚠️ **Node ≥ 22.12.0 필수** (Astro 요구사항). node 20.x면 빌드가 `Node.js vXX is not supported by Astro!`로 실패해요.
+   > winget LTS는 현재 24.x를 깔아줍니다. `--source winget`을 안 붙이면 msstore 동의 프롬프트에서 멈추니 위 플래그를 그대로 쓰세요.
+   > 설치 중 관리자 권한(UAC) 창이 한 번 뜹니다.
+   > **이미 낮은 버전 node로 `npm install`을 돌렸다면**, node 올린 뒤 `node_modules`를 지우고 재설치해야 합니다
+   > (안 그러면 rolldown 네이티브 바이너리 `@rolldown/binding-*`를 못 찾아 빌드 실패). 명령: `rm -r node_modules && npm install`
 2. **레포 clone** (원하는 위치에):
    ```
    git clone https://github.com/appmong/astro_base.git base
@@ -116,6 +121,8 @@ npm install
 - [x] 찍어내기 스크립트(`scripts/new-site.mjs`)
 - [x] 첫 사이트 "뉴스리그"(n-league.net) 생성·빌드·미리보기 검증
 - [x] 두 레포 GitHub 업로드 (astro_base, website01)
+- [x] 두 번째 사이트 "체크포인트 라이프"(cplife.co.kr, repo `appmong/website02`) 완성·배포 — Cloudflare Pages 자동배포, 검증 콘텐츠 15편, 애드센스/GA4/네이버 등록
+- [x] **베이스 UI 고도화(2026-09-07)**: 헤더 검색·다크모드 토글, 히어로 검색바+인기칩(태그 자동), 포춘쿠키 오늘의 쪽지, 대표글 대형카드+카테고리별 섹션, Pretendard 웹폰트, 구조화데이터(Org·WebSite), theme-color·apple-touch-icon, OG 자동생성(`npm run og`). → 이후 찍어내는 사이트는 이 UI가 기본 탑재
 
 ### 남은 일 (우선순위 순)
 - [ ] **니치 확정** — 지금 카테고리는 ppasak과 동일한 8개(정부지원금·세금·법률·금융·부동산·자동차·육아·연금) **플레이스홀더**. 겹치면 손해라 옆으로 트는 것 권장. `site.config.ts`의 `CATEGORIES`.
@@ -130,7 +137,7 @@ npm install
 
 ## 7. 알아둘 함정 (gotchas)
 
-- **node_modules는 git/복사에서 제외** — OS별 바이너리라 옮기면 깨짐. 항상 `npm install`로 새로.
+- **node_modules는 git/복사에서 제외** — OS별 바이너리라 옮기면 깨짐. 항상 `npm install`로 새로. **단 `npm install`은 Node ≥22.12에서** 돌려야 rolldown 네이티브 바이너리가 제대로 받아짐(낮은 node로 받았으면 지우고 재설치).
 - **미리보기 러너·bash에 node PATH가 없음** — `.claude/launch.json`은 `node.exe` 절대경로로 astro 실행. 새 PC에선 경로 확인.
 - **Claude 메모리는 PC별** — 이 문서가 유일한 인수인계. 진행하면서 이 문서도 갱신하세요.
 - **GCM 자격증명도 PC별** — 새 PC 첫 push 때 GitHub 로그인 창 1회.
